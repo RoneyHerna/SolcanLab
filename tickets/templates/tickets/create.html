@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block body_class %}dashboard-body{% endblock %}
+{% block navbar %}{% endblock %}
+{% block main_container_class %}dashboard-main-container{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-shell">
+  {% include 'components/dashboard/sidebar.html' with active_menu='create' %}
+
+  <section class="dashboard-panel">
+    {% include 'components/dashboard/topbar.html' %}
+
+    <div class="dashboard-content">
+      <div class="ticket-detail-header">
+        <div>
+          <h1 class="ticket-detail-title">Crear Ticket</h1>
+
+          <p class="dashboard-muted mt-2 mb-0">
+            Registra una nueva solicitud de soporte t&eacute;cnico
+          </p>
+        </div>
+      </div>
+
+      <div class="ticket-detail-grid">
+        <div class="ticket-stack">
+          <div class="dashboard-card">
+            <div class="ticket-section-title">
+              <i class="bi bi-file-earmark-plus"></i>
+              Informaci&oacute;n del ticket
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %} {% if form.non_field_errors %}
+              <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+              {% endif %}
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">
+                  {{ form.title.label }}
+                </label>
+
+                {{ form.title }} {% for error in form.title.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+                {% endfor %}
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">
+                  {{ form.description.label }}
+                </label>
+
+                {{ form.description }}
+                {% for error in form.description.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+                {% endfor %}
+              </div>
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    {{ form.priority.label }}
+                  </label>
+
+                  {{ form.priority }} {% for error in form.priority.errors %}
+                  <div class="text-danger small mt-1">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    {{ form.attachment.label }}
+                  </label>
+
+                  {{ form.attachment }}
+                  {% for error in form.attachment.errors %}
+                  <div class="text-danger small mt-1">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="d-flex flex-wrap gap-2 mt-4">
+                <button type="submit" class="btn btn-primary login-btn">
+                  <i class="bi bi-plus-circle me-1"></i>
+                  Crear Ticket
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <aside class="ticket-stack">
+          <div class="dashboard-card">
+            <div class="ticket-section-title">
+              <i class="bi bi-info-circle"></i>
+              Resumen inicial
+            </div>
+
+            <div class="ticket-meta-grid" style="grid-template-columns: 1fr">
+              <div>
+                <div class="ticket-summary-label">
+                  <i class="bi bi-play"></i>
+                  Estado
+                </div>
+                <span class="soft-badge open"> Abierto </span>
+              </div>
+
+              <div>
+                <div class="ticket-summary-label">
+                  <i class="bi bi-person"></i>
+                  Cliente
+                </div>
+                <div class="ticket-summary-value">
+                  {{ request.user.username }}
+                </div>
+              </div>
+
+              <div>
+                <div class="ticket-summary-label">
+                  <i class="bi bi-globe"></i>
+                  Origen
+                </div>
+                <div class="ticket-summary-value">Portal web</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-card">
+            <div class="ticket-section-title">
+              <i class="bi bi-shield-check"></i>
+              Atenci&oacute;n
+            </div>
+
+            <p class="dashboard-muted mb-0">
+              El equipo de soporte revisar&aacute; la solicitud y dar&aacute;
+              seguimiento por los medios establecidos.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% endblock %}

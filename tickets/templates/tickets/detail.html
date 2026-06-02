@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+
+{% block body_class %}dashboard-body{% endblock %}
+{% block navbar %}{% endblock %}
+{% block main_container_class %}dashboard-main-container{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-shell">
+  {% include 'components/dashboard/sidebar.html' with active_menu='tickets' %}
+
+  <section class="dashboard-panel">
+    {% include 'components/dashboard/topbar.html' %}
+
+    <div class="dashboard-content">
+      <div class="ticket-detail-header">
+        <div>
+          <a href="/dashboard/" class="ticket-back-link">
+            <i class="bi bi-arrow-left"></i>
+            Volver a la lista de tickets
+          </a>
+
+          <div class="d-flex flex-wrap align-items-center gap-3">
+            <h1 class="ticket-detail-title">Ticket #{{ ticket.id }}</h1>
+
+            {% include 'components/tickets/status_badge.html' %}
+          </div>
+
+          <p class="dashboard-muted mt-2 mb-0">
+            Creado el {{ ticket.created_at|date:"d/m/Y - h:i A" }}
+          </p>
+        </div>
+
+        {% if request.user.role == 'admin' %}
+        <div class="ticket-detail-actions">
+          {% if not ticket.assigned_to %}
+          <a
+            href="/tickets/take/{{ ticket.id }}/"
+            class="btn btn-primary login-btn"
+          >
+            <i class="bi bi-person-check me-1"></i>
+            Asignar
+          </a>
+          {% endif %} {% if ticket.status != 'closed' %}
+          <a href="/tickets/close/{{ ticket.id }}/" class="btn btn-success">
+            <i class="bi bi-check2-circle me-1"></i>
+            Cerrar ticket
+          </a>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="dashboard-card mb-4">
+        <div class="ticket-summary-card">
+          <div class="ticket-summary-main">
+            <div class="ticket-summary-icon">
+              <i class="bi bi-file-earmark-text"></i>
+            </div>
+
+            <div>
+              <h2 class="dashboard-title fs-4 mb-2">{{ ticket.title }}</h2>
+              <div class="dashboard-muted">
+                {{ ticket.description|truncatechars:90 }}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="ticket-summary-label">
+              <i class="bi bi-play"></i>
+              Estado
+            </div>
+            <div>{% include 'components/tickets/status_badge.html' %}</div>
+          </div>
+
+          <div>
+            <div class="ticket-summary-label">
+              <i class="bi bi-star"></i>
+              Prioridad
+            </div>
+            <div>{% include 'components/tickets/priority_badge.html' %}</div>
+          </div>
+
+          <div>
+            <div class="ticket-summary-label">
+              <i class="bi bi-person"></i>
+              Cliente
+            </div>
+            <div class="ticket-summary-value">{{ ticket.created_by }}</div>
+          </div>
+
+          <div>
+            <div class="ticket-summary-label">
+              <i class="bi bi-person-check"></i>
+              Asignado
+            </div>
+            <div class="ticket-summary-value">
+              {% if ticket.assigned_to %} {{ ticket.assigned_to }} {% else %}
+              Sin asignar {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="ticket-meta-grid">
+          <div>
+            <div class="ticket-summary-label">
+              <i class="bi bi-calendar-event"></i>
+              Fecha elaboraci&oacute;n
+            </div>
+            <div class="ticket-summary-value">
+              {{ ticket.elaboration_date|date:"d/m/Y" }}
+            </div>
+          </div>
+
+          <div>
+            <div class="ticket-summary-label">
+              <i class="bi bi-clock-history"></i>
+              &Uacute;ltima actualizaci&oacute;n
+            </div>
+            <div class="ticket-summary-value">
+              {{ ticket.updated_at|date:"d/m/Y - h:i A" }}
+            </div>
+          </div>
+
+          <div>
+            <div class="ticket-summary-label">
+              <i class="bi bi-folder"></i>
+              Categor&iacute;a
+            </div>
+            <div class="ticket-summary-value">Sin categor&iacute;a</div>
+          </div>
+
+          <div>
+            <div class="ticket-summary-label">
+              <i class="bi bi-globe2"></i>
+              Origen
+            </div>
+            <div class="ticket-summary-value">Portal web</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ticket-detail-grid">
+        <div class="ticket-stack">
+          <div class="dashboard-card">
+            <div class="ticket-section-title">
+              <i class="bi bi-info-circle"></i>
+              Descripci&oacute;n del problema
+            </div>
+
+            <p class="mb-0">{{ ticket.description }}</p>
+          </div>
+
+          <div class="dashboard-card">
+            <div class="ticket-section-title">
+              <i class="bi bi-paperclip"></i>
+              Archivos adjuntos ({{ attachments|length }})
+            </div>
+
+            {% for file in attachments %}
+            <div class="attachment-item">
+              <div class="d-flex align-items-center gap-3 min-w-0">
+                <div class="attachment-file-icon">
+                  <i class="bi bi-file-earmark-arrow-down"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="fw-semibold text-truncate">
+                    {{ file.file.name }}
+                  </div>
+                  <div class="dashboard-muted small">Archivo adjunto</div>
+                </div>
+              </div>
+
+              <a
+                href="{{ file.file.url }}"
+                target="_blank"
+                class="attachment-download"
+              >
+                <i class="bi bi-download"></i>
+              </a>
+            </div>
+            {% empty %}
+            <p class="dashboard-muted mb-0">No hay archivos adjuntos.</p>
+            {% endfor %}
+          </div>
+
+          {% if request.user.role == 'admin' %}
+          <div class="dashboard-card">
+            <div class="ticket-section-title">
+              <i class="bi bi-journal-text"></i>
+              Notas internas
+            </div>
+
+            <form
+              method="POST"
+              enctype="multipart/form-data"
+              action="/tickets/add-note/{{ ticket.id }}/"
+            >
+              {% csrf_token %} {% if note_form.non_field_errors %}
+              <div class="alert alert-danger">
+                {{ note_form.non_field_errors }}
+              </div>
+              {% endif %}
+
+              <div class="mb-3">
+                <label class="form-label"> Agregar nota t&eacute;cnica </label>
+
+                {{ note_form.message }}
+                {% for error in note_form.message.errors %}
+                <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+              </div>
+
+              <div
+                class="d-flex flex-wrap align-items-center justify-content-between gap-3"
+              >
+                <div class="flex-grow-1">
+                  {{ note_form.attachment }}
+                  {% for error in note_form.attachment.errors %}
+                  <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-primary login-btn">
+                  Guardar nota
+                </button>
+              </div>
+            </form>
+
+            {% if notes %}
+            <hr />
+
+            {% for note in notes %}
+            <div class="note-card mb-3">
+              <div class="d-flex justify-content-between gap-3">
+                <strong>{{ note.user.username }}</strong>
+                <small class="dashboard-muted">
+                  {{ note.created_at|date:"d/m/Y - h:i A" }}
+                </small>
+              </div>
+              <p class="mb-2 mt-2">{{ note.message }}</p>
+
+              {% for file in note.attachments.all %}
+              <a
+                href="{{ file.file.url }}"
+                target="_blank"
+                class="dashboard-action-link d-block"
+              >
+                <i class="bi bi-paperclip me-1"></i>
+                {{ file.file.name }}
+              </a>
+              {% endfor %}
+            </div>
+            {% endfor %} {% endif %}
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="dashboard-card">
+          <div class="ticket-section-title">
+            <i class="bi bi-clock-history"></i>
+            Actividad del ticket
+          </div>
+
+          <div class="activity-timeline">
+            <div class="activity-item">
+              <div class="activity-icon green">
+                <i class="bi bi-plus-lg"></i>
+              </div>
+              <div class="fw-semibold">Ticket creado</div>
+              <div class="dashboard-muted">
+                El ticket fue creado por {{ ticket.created_by }}
+              </div>
+              <div class="dashboard-muted small">
+                {{ ticket.created_at|date:"d/m/Y - h:i A" }}
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon blue">
+                <i class="bi bi-pencil"></i>
+              </div>
+              <div class="fw-semibold">Estado actual</div>
+              <div class="dashboard-muted">
+                El ticket est&aacute; en estado "{{ ticket.get_status_display }}"
+              </div>
+              <div class="dashboard-muted small">
+                {{ ticket.updated_at|date:"d/m/Y - h:i A" }}
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon purple">
+                <i class="bi bi-person"></i>
+              </div>
+              <div class="fw-semibold">Asignaci&oacute;n</div>
+              <div class="dashboard-muted">
+                {% if ticket.assigned_to %} Asignado a {{ ticket.assigned_to }}
+                {% else %} Ticket sin asignar {% endif %}
+              </div>
+              <div class="dashboard-muted small">
+                {{ ticket.updated_at|date:"d/m/Y - h:i A" }}
+              </div>
+            </div>
+
+            {% if attachments %}
+            <div class="activity-item">
+              <div class="activity-icon gold">
+                <i class="bi bi-paperclip"></i>
+              </div>
+              <div class="fw-semibold">Archivo adjunto</div>
+              <div class="dashboard-muted">
+                Se agregaron {{ attachments|length }} archivo(s) al ticket
+              </div>
+              <div class="dashboard-muted small">
+                {{ ticket.created_at|date:"d/m/Y - h:i A" }}
+              </div>
+            </div>
+            {% endif %} {% for note in notes|slice:":4" %}
+            <div class="activity-item">
+              <div class="activity-icon purple">
+                <i class="bi bi-chat-dots"></i>
+              </div>
+              <div class="fw-semibold">Nota interna agregada</div>
+              <div class="dashboard-muted">
+                {{ note.user.username }} agreg&oacute; una nota
+              </div>
+              <div class="dashboard-muted small">
+                {{ note.created_at|date:"d/m/Y - h:i A" }}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <a href="/dashboard/" class="btn btn-outline-primary w-100 mt-4">
+            Ver toda la actividad
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% endblock %}

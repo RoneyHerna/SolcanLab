@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block body_class %}login-body{% endblock %}
+{% block navbar %}{% endblock %}
+{% block main_container_class %}login-main-container login-page{% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-column align-items-center justify-content-center login-container">
+
+    <div class="card border-0 login-card">
+
+        <div class="login-card-body">
+
+            <div class="login-brand">
+
+                <div class="login-brand-mark">
+                    <i class="bi bi-headset"></i>
+                </div>
+
+                <div>
+                    <div class="login-brand-title">
+                        SolcanLab
+                    </div>
+
+                    <div class="login-brand-subtitle">
+                        Sistema de soporte técnico
+                    </div>
+                </div>
+
+            </div>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+                        Usuario
+                    </label>
+
+                    <div class="login-field">
+                        <i class="bi bi-person login-field-icon"></i>
+                        <input
+                            type="text"
+                            name="username"
+                            class="form-control form-control-lg rounded-3"
+                            placeholder="Ingresa tu usuario"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+                        Contraseña
+                    </label>
+
+                    <div class="login-field">
+                        <i class="bi bi-lock login-field-icon"></i>
+                        <input
+                            type="password"
+                            name="password"
+                            id="login-password"
+                            class="form-control form-control-lg rounded-3 password-input"
+                            placeholder="Ingresa tu contraseña"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <button
+                            type="button"
+                            class="login-password-toggle"
+                            aria-label="Mostrar contraseña"
+                            data-password-toggle
+                        >
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="d-grid">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-lg rounded-3 login-btn"
+                    >
+                        Ingresar
+                    </button>
+
+                </div>
+
+            </form>
+
+            <div class="text-center login-footer-note mt-4">
+                <i class="bi bi-heart-fill me-1"></i>
+                Cuida tu salud
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggle = document.querySelector('[data-password-toggle]');
+        const password = document.getElementById('login-password');
+
+        if (!toggle || !password) {
+            return;
+        }
+
+        toggle.addEventListener('click', function () {
+            const isPassword = password.type === 'password';
+            password.type = isPassword ? 'text' : 'password';
+            toggle.setAttribute(
+                'aria-label',
+                isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
+            );
+            toggle.innerHTML = isPassword
+                ? '<i class="bi bi-eye-slash"></i>'
+                : '<i class="bi bi-eye"></i>';
+        });
+    });
+</script>
+
+{% endblock %}

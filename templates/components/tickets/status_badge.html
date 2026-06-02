@@ -1,0 +1,7 @@
+{% if ticket.status == 'open' %}
+<span class="soft-badge open">Abierto</span>
+{% elif ticket.status == 'progress' %}
+<span class="soft-badge progress">En progreso</span>
+{% else %}
+<span class="soft-badge closed">Cerrado</span>
+{% endif %}

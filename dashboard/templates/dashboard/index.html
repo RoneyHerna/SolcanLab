@@ -1,0 +1,439 @@
+{% extends 'base.html' %}
+
+{% block body_class %}dashboard-body{% endblock %}
+{% block navbar %}{% endblock %}
+{% block main_container_class %}dashboard-main-container{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-shell">
+  {% include 'components/dashboard/sidebar.html' with active_menu='dashboard' %}
+
+  <section class="dashboard-panel">
+    {% include 'components/dashboard/topbar.html' %}
+
+    <div
+      class="dashboard-content {% if request.user.role == 'client' %}client-ticket-view{% endif %}"
+    >
+      <div
+        class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4"
+      >
+        <div>
+          <h1 class="dashboard-title mb-1">
+            {% if request.user.role == 'admin' %}
+              Dashboard
+            {% else %}
+              Tickets
+            {% endif %}
+          </h1>
+          <p class="dashboard-muted mb-0">
+            {% if request.user.role == 'admin' %}
+              Resumen general del sistema
+            {% else %}
+              Solicitudes creadas en el sistema
+            {% endif %}
+          </p>
+        </div>
+      </div>
+
+      {% if request.user.role == 'admin' %}
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-icon blue">
+            <i class="bi bi-ticket-perforated"></i>
+          </div>
+          <div>
+            <div class="metric-label">Tickets abiertos</div>
+            <div class="metric-value">{{ open_tickets }}</div>
+            <div class="metric-trend">{{ open_percent }}% del total</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon purple">
+            <i class="bi bi-check2"></i>
+          </div>
+          <div>
+            <div class="metric-label">Tickets en progreso</div>
+            <div class="metric-value">{{ progress_tickets }}</div>
+            <div class="metric-trend">{{ progress_percent }}% del total</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon green">
+            <i class="bi bi-check-lg"></i>
+          </div>
+          <div>
+            <div class="metric-label">Tickets cerrados</div>
+            <div class="metric-value">{{ closed_tickets }}</div>
+            <div class="metric-trend">{{ closed_percent }}% del total</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon gold">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <div>
+            {% if request.user.role == 'admin' %}
+            <div class="metric-label">Clientes registrados</div>
+            <div class="metric-value">{{ client_count }}</div>
+            <div class="metric-trend">Usuarios cliente</div>
+            {% else %}
+            <div class="metric-label">Mis tickets</div>
+            <div class="metric-value">{{ total_tickets }}</div>
+            <div class="metric-trend">Solicitudes creadas</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      {% if request.user.role == 'admin' %}
+
+      <div id="export-tickets" class="dashboard-card export-card">
+        <div class="dashboard-card-title">Exportar tickets</div>
+
+        <form
+          method="GET"
+          action="/tickets/export/"
+          class="row g-3 align-items-end"
+        >
+          <div class="col-md-2">
+            <label class="form-label"> {{ export_form.day.label }} </label>
+            {{ export_form.day }}
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label"> {{ export_form.month.label }} </label>
+            {{ export_form.month }}
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label"> {{ export_form.year.label }} </label>
+            {{ export_form.year }}
+          </div>
+
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-file-earmark-excel me-1"></i>
+              Exportar Excel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {% endif %}
+
+      <div class="dashboard-grid mb-3">
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Tickets por estado</div>
+
+          <div class="donut-wrap">
+            <div class="donut-chart" style="background: {{ donut_gradient }};">
+              <div class="donut-center">
+                <div class="donut-total">{{ total_tickets }}</div>
+                <div class="dashboard-muted small">Total</div>
+              </div>
+            </div>
+
+            <ul class="legend-list">
+              <li>
+                <span class="legend-dot" style="background: #2563eb"></span>
+                Abiertos ({{ open_tickets }})
+              </li>
+              <li>
+                <span class="legend-dot" style="background: #8a3ffc"></span>
+                En progreso ({{ progress_tickets }})
+              </li>
+              <li>
+                <span class="legend-dot" style="background: #22c55e"></span>
+                Cerrados ({{ closed_tickets }})
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Tickets por prioridad</div>
+
+          <div class="priority-bars">
+            {% for item in priority_bars %}
+            <div class="priority-bar-item">
+              <div class="priority-count">{{ item.count }}</div>
+              <div
+                class="priority-bar"
+                style="height: {{ item.percent }}%; background: {{ item.color }};"
+              ></div>
+              <div class="priority-label">{{ item.label }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div id="tickets-table" class="dashboard-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="dashboard-card-title mb-0">Tickets recientes</div>
+            <span class="dashboard-muted small">
+              {{ total_tickets }} registros
+            </span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table ticket-table">
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Prioridad</th>
+                  <th>Estado</th>
+                  <th>Fecha</th>
+                  {% if request.user.role == 'admin' %}
+                  <th>Acciones</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for ticket in tickets %}
+                <tr>
+                  <td>
+                    <a
+                      href="/tickets/detail/{{ ticket.id }}/"
+                      class="fw-semibold text-decoration-none"
+                    >
+                      {{ ticket.title }}
+                    </a>
+                    <div class="dashboard-muted small">
+                      Cliente: {{ ticket.created_by }}
+                    </div>
+                  </td>
+
+                  <td>
+                    {% include 'components/tickets/priority_badge.html' %}
+                  </td>
+
+                  <td>{% include 'components/tickets/status_badge.html' %}</td>
+
+                  <td>{{ ticket.elaboration_date|date:"d/m/Y" }}</td>
+
+                  {% if request.user.role == 'admin' %}
+                  <td>
+                    <div class="d-flex flex-wrap gap-2">
+                      {% if not ticket.assigned_to %}
+                      <a
+                        href="/tickets/take/{{ ticket.id }}/"
+                        class="btn btn-primary btn-sm"
+                      >
+                        Tomar
+                      </a>
+                      {% endif %} {% if ticket.status != 'closed' %}
+                      <a
+                        href="/tickets/close/{{ ticket.id }}/"
+                        class="btn btn-success btn-sm"
+                      >
+                        Cerrar
+                      </a>
+                      {% endif %}
+                    </div>
+                  </td>
+                  {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center dashboard-muted py-4">
+                    No hay tickets registrados.
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Actividad reciente</div>
+
+          <div class="list-group list-group-flush">
+            {% for ticket in recent_tickets %}
+            <a
+              href="/tickets/detail/{{ ticket.id }}/"
+              class="list-group-item list-group-item-action border-0 px-0"
+            >
+              <div class="d-flex align-items-start gap-3">
+                <div
+                  class="metric-icon blue"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    flex-basis: 40px;
+                    font-size: 17px;
+                  "
+                >
+                  <i class="bi bi-chat-dots"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="fw-semibold">
+                    Ticket #{{ ticket.id }} actualizado
+                  </div>
+                  <div class="dashboard-muted small">{{ ticket.title }}</div>
+                </div>
+                <div class="dashboard-muted small text-nowrap">
+                  {{ ticket.updated_at|date:"d/m/Y" }}
+                </div>
+              </div>
+            </a>
+            {% empty %}
+            <div class="dashboard-muted">Sin actividad reciente.</div>
+            {% endfor %}
+          </div>
+
+          <div class="text-end mt-3">
+            <a href="#tickets-table" class="dashboard-action-link">
+              Ver todos los tickets
+              <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {% else %}
+
+      <div id="tickets-table" class="dashboard-card client-ticket-card">
+        <div
+          class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4"
+        >
+          <div>
+            <div class="dashboard-card-title mb-1">Mis tickets</div>
+            <p class="dashboard-muted mb-0">
+              Consulta las solicitudes que has creado en el sistema.
+            </p>
+          </div>
+        </div>
+
+        <div class="table-responsive client-ticket-table-wrap">
+          <table class="table ticket-table">
+            <thead>
+              <tr>
+                <th>Ticket</th>
+                <th>Prioridad</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Acci&oacute;n</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ticket in tickets %}
+              <tr>
+                <td>
+                  <a
+                    href="/tickets/detail/{{ ticket.id }}/"
+                    class="fw-semibold text-decoration-none"
+                  >
+                    {{ ticket.title }}
+                  </a>
+                  <div class="dashboard-muted small">
+                    Ticket #{{ ticket.id }}
+                  </div>
+                </td>
+
+                <td>{% include 'components/tickets/priority_badge.html' %}</td>
+
+                <td>{% include 'components/tickets/status_badge.html' %}</td>
+
+                <td>{{ ticket.elaboration_date|date:"d/m/Y" }}</td>
+
+                <td>
+                  <a
+                    href="/tickets/detail/{{ ticket.id }}/"
+                    class="dashboard-action-link"
+                  >
+                    Ver detalle
+                    <i class="bi bi-arrow-right ms-1"></i>
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center py-5">
+                  <div class="dashboard-muted mb-3">
+                    A&uacute;n no has creado tickets.
+                  </div>
+                  <a href="/tickets/create/" class="btn btn-primary login-btn">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Crear mi primer ticket
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% if ticket_page and ticket_page.paginator.num_pages > 1 %}
+        <div class="ticket-pagination">
+          <div class="dashboard-muted small">
+            P&aacute;gina {{ ticket_page.number }} de {{ ticket_page.paginator.num_pages }}
+          </div>
+
+          <nav aria-label="Paginaci&oacute;n de tickets">
+            <ul class="pagination pagination-sm">
+              {% if ticket_page.has_previous %}
+              <li class="page-item">
+                <a
+                  class="page-link"
+                  href="?page={{ ticket_page.previous_page_number }}#tickets-table"
+                >
+                  Anterior
+                </a>
+              </li>
+              {% else %}
+              <li class="page-item disabled">
+                <span class="page-link">Anterior</span>
+              </li>
+              {% endif %}
+
+              {% for page_number in ticket_page.paginator.page_range %}
+              <li
+                class="page-item {% if ticket_page.number == page_number %}active{% endif %}"
+              >
+                {% if ticket_page.number == page_number %}
+                <span class="page-link">{{ page_number }}</span>
+                {% else %}
+                <a
+                  class="page-link"
+                  href="?page={{ page_number }}#tickets-table"
+                >
+                  {{ page_number }}
+                </a>
+                {% endif %}
+              </li>
+              {% endfor %}
+
+              {% if ticket_page.has_next %}
+              <li class="page-item">
+                <a
+                  class="page-link"
+                  href="?page={{ ticket_page.next_page_number }}#tickets-table"
+                >
+                  Siguiente
+                </a>
+              </li>
+              {% else %}
+              <li class="page-item disabled">
+                <span class="page-link">Siguiente</span>
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+        {% endif %}
+      </div>
+
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+{% endblock %}

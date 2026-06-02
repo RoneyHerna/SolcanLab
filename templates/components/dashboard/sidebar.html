@@ -1,0 +1,57 @@
+<aside class="dashboard-sidebar">
+
+    <div class="dashboard-brand">
+        <div class="dashboard-brand-mark">
+            <i class="bi bi-headset"></i>
+        </div>
+
+        <div>
+            <div class="dashboard-brand-title">
+                SolcanLab
+            </div>
+            <div class="dashboard-brand-subtitle">
+                Sistema de soporte
+            </div>
+        </div>
+    </div>
+
+    <nav class="dashboard-menu">
+        {% if request.user.role == 'admin' %}
+            <a href="/dashboard/" class="dashboard-menu-link {% if active_menu == 'dashboard' %}active{% endif %}">
+                <i class="bi bi-house-door-fill"></i>
+                <span class="dashboard-menu-label">Dashboard</span>
+            </a>
+
+            <a href="/dashboard/#tickets-table" class="dashboard-menu-link {% if active_menu == 'tickets' %}active{% endif %}">
+                <i class="bi bi-file-earmark-text"></i>
+                <span class="dashboard-menu-label">Tickets</span>
+            </a>
+
+            <a href="/dashboard/#export-tickets" class="dashboard-menu-link {% if active_menu == 'export' %}active{% endif %}">
+                <i class="bi bi-file-earmark-excel"></i>
+                <span class="dashboard-menu-label">Exportar</span>
+            </a>
+        {% else %}
+            <a href="/dashboard/" class="dashboard-menu-link {% if active_menu != 'create' %}active{% endif %}">
+                <i class="bi bi-file-earmark-text"></i>
+                <span class="dashboard-menu-label">Tickets</span>
+            </a>
+
+            <a href="/tickets/create/" class="dashboard-menu-link {% if active_menu == 'create' %}active{% endif %}">
+                <i class="bi bi-plus-circle"></i>
+                <span class="dashboard-menu-label">Crear ticket</span>
+            </a>
+        {% endif %}
+    </nav>
+
+    <div class="dashboard-sidebar-help">
+        <div class="dashboard-sidebar-help-card">
+            <i class="bi bi-headset fs-2"></i>
+            <div class="fw-bold mt-2">&iquest;Necesitas ayuda?</div>
+            <div class="small text-white-50">
+                Nuestro equipo est&aacute; listo para apoyarte.
+            </div>
+        </div>
+    </div>
+
+</aside>

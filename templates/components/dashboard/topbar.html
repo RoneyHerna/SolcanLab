@@ -1,0 +1,49 @@
+<header class="dashboard-topbar">
+    <div class="d-flex align-items-center gap-3">
+        <div class="dashboard-brand-mark">
+            <i class="bi bi-headset"></i>
+        </div>
+        <div>
+            <div class="fw-bold fs-4">
+                SolcanLab
+            </div>
+            <div class="small text-white-50">
+                Sistema de soporte t&eacute;cnico
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-topbar-actions">
+        <a href="/dashboard/#tickets-table" class="dashboard-topbar-icon">
+            <i class="bi bi-search fs-5"></i>
+        </a>
+
+        <a href="/dashboard/#tickets-table" class="dashboard-topbar-icon">
+            <i class="bi bi-bell fs-5"></i>
+            {% if open_tickets %}
+                <span class="dashboard-notification-badge">
+                    {{ open_tickets }}
+                </span>
+            {% endif %}
+        </a>
+
+        <div class="dashboard-user-menu">
+            <span class="dashboard-user-avatar">
+                {{ request.user.username|first|upper }}
+            </span>
+
+            <div class="dashboard-user-meta">
+                <span class="dashboard-user-name">
+                    {{ request.user.username }}
+                </span>
+                <span class="dashboard-user-role">
+                    {{ request.user.get_role_display }}
+                </span>
+                <a href="/logout/" class="dashboard-logout-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Cerrar sesi&oacute;n
+                </a>
+            </div>
+        </div>
+    </div>
+</header>

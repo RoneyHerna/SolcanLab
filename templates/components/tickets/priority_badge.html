@@ -1,0 +1,7 @@
+{% if ticket.priority == 'high' %}
+<span class="soft-badge high">Alta</span>
+{% elif ticket.priority == 'medium' %}
+<span class="soft-badge medium">Media</span>
+{% else %}
+<span class="soft-badge low">Baja</span>
+{% endif %}
