@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block body_class %}dashboard-body{% endblock %}
+{% block navbar %}{% endblock %}
+{% block main_container_class %}dashboard-main-container{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-shell">
+  {% include 'components/dashboard/sidebar.html' with active_menu='tickets' %}
+
+  <section class="dashboard-panel">
+    {% include 'components/dashboard/topbar.html' %}
+
+    <div
+      class="dashboard-content {% if request.user.role == 'client' %}client-ticket-view{% else %}admin-ticket-view{% endif %}"
+    >
+      <div
+        class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4"
+      >
+        <div>
+          <h1 class="dashboard-title mb-1">Tickets</h1>
+          <p class="dashboard-muted mb-0">
+            {% if request.user.role == 'admin' %}
+            Administra las solicitudes creadas en el sistema
+            {% else %}
+            Solicitudes creadas en el sistema
+            {% endif %}
+          </p>
+        </div>
+
+      </div>
+
+      {% if request.user.role == 'admin' %}
+      <div id="export-tickets" class="dashboard-card export-card">
+        <div class="dashboard-card-title">Exportar tickets</div>
+
+        <form
+          method="GET"
+          action="/tickets/export/"
+          class="row g-3 align-items-end"
+        >
+          <div class="col-md-2">
+            <label class="form-label">{{ export_form.day.label }}</label>
+            {{ export_form.day }}
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ export_form.month.label }}</label>
+            {{ export_form.month }}
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">{{ export_form.year.label }}</label>
+            {{ export_form.year }}
+          </div>
+
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-file-earmark-excel me-1"></i>
+              Exportar Excel
+            </button>
+          </div>
+        </form>
+      </div>
+      {% endif %}
+
+      <div
+        id="tickets-table"
+        class="dashboard-card client-ticket-card {% if request.user.role == 'admin' %}admin-ticket-card{% endif %}"
+      >
+        <div
+          class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4"
+        >
+          <div>
+            <div class="dashboard-card-title mb-1">
+              {% if request.user.role == 'admin' %}
+              Todos los tickets
+              {% else %}
+              Mis tickets
+              {% endif %}
+            </div>
+            <p class="dashboard-muted mb-0">
+              Consulta las solicitudes registradas en el sistema.
+            </p>
+          </div>
+
+          <span class="dashboard-muted small">
+            {{ total_tickets }} registros
+          </span>
+        </div>
+
+        <div class="table-responsive client-ticket-table-wrap">
+          <table class="table ticket-table">
+            <thead>
+              <tr>
+                <th>Ticket</th>
+                {% if request.user.role == 'admin' %}
+                <th>Cliente</th>
+                {% endif %}
+                <th>Prioridad</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Acci&oacute;n</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ticket in tickets %}
+              <tr>
+                <td>
+                  <a
+                    href="/tickets/detail/{{ ticket.id }}/"
+                    class="fw-semibold text-decoration-none"
+                  >
+                    {{ ticket.title }}
+                  </a>
+                  <div class="dashboard-muted small">
+                    Ticket #{{ ticket.id }}
+                  </div>
+                </td>
+
+                {% if request.user.role == 'admin' %}
+                <td>{{ ticket.created_by }}</td>
+                {% endif %}
+
+                <td>{% include 'components/tickets/priority_badge.html' %}</td>
+
+                <td>{% include 'components/tickets/status_badge.html' %}</td>
+
+                <td>{{ ticket.elaboration_date|date:"d/m/Y" }}</td>
+
+                <td>
+                  {% if request.user.role == 'admin' %}
+                  <div class="d-flex flex-wrap gap-2">
+                    <a
+                      href="/tickets/detail/{{ ticket.id }}/"
+                      class="dashboard-action-link"
+                    >
+                      Ver detalle
+                    </a>
+
+                    {% if not ticket.assigned_to %}
+                    <a
+                      href="/tickets/take/{{ ticket.id }}/"
+                      class="btn btn-primary btn-sm"
+                    >
+                      Tomar
+                    </a>
+                    {% endif %}
+
+                    {% if ticket.status != 'closed' %}
+                    <a
+                      href="/tickets/close/{{ ticket.id }}/"
+                      class="btn btn-success btn-sm"
+                    >
+                      Cerrar
+                    </a>
+                    {% endif %}
+                  </div>
+                  {% else %}
+                  <a
+                    href="/tickets/detail/{{ ticket.id }}/"
+                    class="dashboard-action-link"
+                  >
+                    Ver detalle
+                    <i class="bi bi-arrow-right ms-1"></i>
+                  </a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6" class="text-center py-5">
+                  <div class="dashboard-muted mb-3">
+                    No hay tickets registrados.
+                  </div>
+
+                  {% if request.user.role == 'client' %}
+                  <a href="/tickets/create/" class="btn btn-primary login-btn">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Crear mi primer ticket
+                  </a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% if ticket_page.paginator.num_pages > 1 %}
+        <div class="ticket-pagination">
+          <div class="dashboard-muted small">
+            P&aacute;gina {{ ticket_page.number }} de {{ ticket_page.paginator.num_pages }}
+          </div>
+
+          <nav aria-label="Paginaci&oacute;n de tickets">
+            <ul class="pagination pagination-sm">
+              {% if ticket_page.has_previous %}
+              <li class="page-item">
+                <a
+                  class="page-link"
+                  href="?page={{ ticket_page.previous_page_number }}#tickets-table"
+                >
+                  Anterior
+                </a>
+              </li>
+              {% else %}
+              <li class="page-item disabled">
+                <span class="page-link">Anterior</span>
+              </li>
+              {% endif %}
+
+              {% for page_number in ticket_page.paginator.page_range %}
+              <li
+                class="page-item {% if ticket_page.number == page_number %}active{% endif %}"
+              >
+                {% if ticket_page.number == page_number %}
+                <span class="page-link">{{ page_number }}</span>
+                {% else %}
+                <a
+                  class="page-link"
+                  href="?page={{ page_number }}#tickets-table"
+                >
+                  {{ page_number }}
+                </a>
+                {% endif %}
+              </li>
+              {% endfor %}
+
+              {% if ticket_page.has_next %}
+              <li class="page-item">
+                <a
+                  class="page-link"
+                  href="?page={{ ticket_page.next_page_number }}#tickets-table"
+                >
+                  Siguiente
+                </a>
+              </li>
+              {% else %}
+              <li class="page-item disabled">
+                <span class="page-link">Siguiente</span>
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% endblock %}

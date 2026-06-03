@@ -22,17 +22,14 @@
                 <span class="dashboard-menu-label">Dashboard</span>
             </a>
 
-            <a href="/dashboard/#tickets-table" class="dashboard-menu-link {% if active_menu == 'tickets' %}active{% endif %}">
+            <a href="/tickets/" class="dashboard-menu-link {% if active_menu == 'tickets' %}active{% endif %}">
                 <i class="bi bi-file-earmark-text"></i>
                 <span class="dashboard-menu-label">Tickets</span>
             </a>
 
-            <a href="/dashboard/#export-tickets" class="dashboard-menu-link {% if active_menu == 'export' %}active{% endif %}">
-                <i class="bi bi-file-earmark-excel"></i>
-                <span class="dashboard-menu-label">Exportar</span>
-            </a>
+            
         {% else %}
-            <a href="/dashboard/" class="dashboard-menu-link {% if active_menu != 'create' %}active{% endif %}">
+            <a href="/tickets/" class="dashboard-menu-link {% if active_menu == 'tickets' %}active{% endif %}">
                 <i class="bi bi-file-earmark-text"></i>
                 <span class="dashboard-menu-label">Tickets</span>
             </a>

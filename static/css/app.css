@@ -188,15 +188,6 @@ body {
             font-size: 16px;
         }
 
-        .login-btn {
-
-            min-height: 56px;
-            font-weight: 700;
-            background: linear-gradient(90deg, #15107a, #0b0755);
-            border-color: #15107a;
-            box-shadow: 0 12px 24px rgba(21,16,122,0.22);
-        }
-
         .login-btn:hover,
         .login-btn:focus {
 
@@ -294,11 +285,6 @@ body {
         .table {
 
             vertical-align: middle;
-        }
-
-        .btn {
-
-            border-radius: 10px;
         }
 
         .form-control,
@@ -542,6 +528,168 @@ body {
             min-height: 0;
             padding: 26px 32px 28px;
             overflow-y: auto;
+        }
+
+        .admin-dashboard-view,
+        .admin-ticket-view {
+
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .admin-dashboard-view {
+
+            gap: 14px;
+            padding-top: 22px;
+            padding-bottom: 22px;
+        }
+
+        .admin-dashboard-view > .d-flex {
+
+            margin-bottom: 0 !important;
+        }
+
+        .admin-dashboard-view .metric-grid {
+
+            margin-bottom: 0;
+        }
+
+        .admin-dashboard-view .dashboard-grid {
+
+            flex: 0 0 auto;
+        }
+
+        .admin-dashboard-view .dashboard-card {
+
+            padding: 18px 20px;
+        }
+
+        .admin-dashboard-view .metric-card {
+
+            padding: 16px 18px;
+        }
+
+        .admin-dashboard-view .metric-icon {
+
+            flex-basis: 48px;
+            width: 48px;
+            height: 48px;
+            font-size: 21px;
+        }
+
+        .admin-dashboard-view .metric-value {
+
+            font-size: 27px;
+        }
+
+        .admin-dashboard-view .dashboard-card-title {
+
+            margin-bottom: 12px;
+        }
+
+        .admin-dashboard-view .donut-chart {
+
+            flex-basis: 150px;
+            width: 150px;
+            height: 150px;
+        }
+
+        .admin-dashboard-view .donut-chart::after {
+
+            width: 82px;
+            height: 82px;
+        }
+
+        .admin-dashboard-view .priority-bars {
+
+            min-height: 170px;
+            padding-top: 4px;
+        }
+
+        .admin-dashboard-view .priority-bar-item {
+
+            height: 150px;
+        }
+
+        .admin-activity-card {
+
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .admin-activity-card .list-group {
+
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+        .admin-activity-card .list-group-item {
+
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        .admin-ticket-view {
+
+            padding-top: 24px;
+            padding-bottom: 24px;
+        }
+
+        .admin-ticket-view > .d-flex {
+
+            margin-bottom: 16px !important;
+        }
+
+        .admin-ticket-view .export-card {
+
+            flex: 0 0 auto;
+            margin-bottom: 14px;
+            padding: 16px 20px;
+        }
+
+        .admin-ticket-view .export-card .dashboard-card-title {
+
+            margin-bottom: 12px;
+        }
+
+        .admin-ticket-view .export-card .form-label {
+
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .admin-ticket-view .export-card .form-control,
+        .admin-ticket-view .export-card .form-select,
+        .admin-ticket-view .export-card .btn {
+
+            min-height: 40px;
+        }
+
+        .admin-ticket-card {
+
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .admin-ticket-card .client-ticket-table-wrap {
+
+            overflow-y: hidden;
+        }
+
+        .admin-ticket-card .ticket-table th,
+        .admin-ticket-card .ticket-table td {
+
+            padding-top: 7px;
+            padding-bottom: 7px;
+        }
+
+        .admin-ticket-card .ticket-pagination {
+
+            padding-top: 10px;
         }
 
         .client-ticket-view {

@@ -1,10 +1,15 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .exports import build_ticket_export_workbook
 from .forms import TicketExportFilterForm, TicketForm, TicketNoteForm
 from .models import NoteAttachment, Ticket, TicketAttachment, TicketNote
+from .selectors import get_status_counts, get_ticket_queryset
+
+
+TICKETS_PER_PAGE = 9
 
 
 def create_ticket_attachment(ticket, attachment):
@@ -43,6 +48,22 @@ def get_ticket_detail_context(ticket, user, note_form=None):
     }
 
 
+def get_ticket_list_context(request):
+    tickets = get_ticket_queryset(request.user)
+    ticket_page = Paginator(tickets, TICKETS_PER_PAGE).get_page(
+        request.GET.get('page')
+    )
+    status_counts = get_status_counts(tickets)
+
+    return {
+        'tickets': ticket_page,
+        'ticket_page': ticket_page,
+        'export_form': TicketExportFilterForm() if request.user.role == 'admin' else None,
+        'total_tickets': status_counts['total'],
+        'open_tickets': status_counts['open'],
+    }
+
+
 def get_export_tickets(filters):
     tickets = Ticket.objects.select_related(
         'created_by',
@@ -77,6 +98,15 @@ def build_export_filename(filters):
 
 
 @login_required
+def ticket_list(request):
+    return render(
+        request,
+        'tickets/index.html',
+        get_ticket_list_context(request),
+    )
+
+
+@login_required
 def create_ticket(request):
     if request.method == 'POST':
         form = TicketForm(request.POST, request.FILES)
@@ -91,7 +121,7 @@ def create_ticket(request):
                 form.cleaned_data.get('attachment'),
             )
 
-            return redirect('/dashboard/')
+            return redirect('/tickets/')
     else:
         form = TicketForm()
 
@@ -113,7 +143,7 @@ def take_ticket(request, ticket_id):
         ticket.status = 'progress'
         ticket.save()
 
-    return redirect('/dashboard/')
+    return redirect('/tickets/')
 
 
 @login_required
@@ -124,7 +154,7 @@ def close_ticket(request, ticket_id):
         ticket.status = 'closed'
         ticket.save()
 
-    return redirect('/dashboard/')
+    return redirect('/tickets/')
 
 
 @login_required
@@ -132,7 +162,7 @@ def ticket_detail(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
     if not user_can_view_ticket(request.user, ticket):
-        return redirect('/dashboard/')
+        return redirect('/tickets/')
 
     return render(
         request,
@@ -144,7 +174,7 @@ def ticket_detail(request, ticket_id):
 @login_required
 def add_note(request, ticket_id):
     if request.user.role != 'admin':
-        return redirect('/dashboard/')
+        return redirect('/tickets/')
 
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
@@ -174,12 +204,12 @@ def add_note(request, ticket_id):
 @login_required
 def export_tickets(request):
     if request.user.role != 'admin':
-        return redirect('/dashboard/')
+        return redirect('/tickets/')
 
     form = TicketExportFilterForm(request.GET)
 
     if not form.is_valid():
-        return redirect('/dashboard/')
+        return redirect('/tickets/')
 
     filters = form.cleaned_data
     tickets = get_export_tickets(filters)
