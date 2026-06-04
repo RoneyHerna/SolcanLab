@@ -1,4 +1,4 @@
-<header class="dashboard-topbar">
+<header class="dashboard-topbar {% if request.user.role == 'client' %}client-topbar{% endif %}">
     <div class="d-flex align-items-center gap-3">
         <div class="dashboard-brand-mark">
             <i class="bi bi-headset"></i>
@@ -133,3 +133,17 @@
         </div>
     </div>
 </header>
+
+{% if request.user.role == 'client' %}
+<nav class="dashboard-mobile-menu" aria-label="Menu principal cliente">
+    <a href="/tickets/" class="dashboard-mobile-menu-link">
+        <i class="bi bi-file-earmark-text"></i>
+        Tickets
+    </a>
+
+    <a href="/tickets/create/" class="dashboard-mobile-menu-link">
+        <i class="bi bi-plus-circle"></i>
+        Crear ticket
+    </a>
+</nav>
+{% endif %}

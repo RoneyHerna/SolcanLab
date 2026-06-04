@@ -1511,12 +1511,11 @@ body {
 
         .client-ticket-detail-view {
 
-            display: flex;
-            flex-direction: column;
+            display: block;
             min-height: 0;
             padding-top: 20px;
             padding-bottom: 20px;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         .client-ticket-detail-view .ticket-detail-header {
@@ -1589,16 +1588,16 @@ body {
 
         .client-ticket-detail-view .ticket-detail-grid {
 
-            flex: 1;
-            min-height: 0;
+            min-height: auto;
             gap: 14px;
+            align-items: start;
         }
 
         .client-ticket-detail-view .ticket-stack {
 
-            min-height: 0;
-            grid-template-rows: auto auto minmax(0, 1fr);
+            grid-template-rows: none;
             gap: 12px;
+            align-content: start;
         }
 
         .client-ticket-detail-view .ticket-detail-grid .dashboard-card {
@@ -1628,7 +1627,7 @@ body {
         .client-ticket-detail-view .ticket-detail-grid > .dashboard-card:last-child {
 
             min-height: 0;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .client-ticket-detail-view .activity-timeline {
@@ -1658,6 +1657,712 @@ body {
 
             min-height: 40px;
             margin-top: 12px !important;
+        }
+
+        .dashboard-mobile-menu {
+
+            display: none;
+        }
+
+        .client-ticket-create-view {
+
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        .client-ticket-create-view .ticket-detail-header {
+
+            flex: 0 0 auto;
+        }
+
+        .client-ticket-create-view .ticket-detail-grid {
+
+            flex: 1;
+            min-height: 0;
+            grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+        }
+
+        .client-ticket-create-view .ticket-stack {
+
+            min-height: 0;
+        }
+
+        .client-ticket-create-view textarea.form-control {
+
+            min-height: 150px;
+        }
+
+        @media (max-height: 820px) and (min-width: 993px) {
+
+            .client-dashboard-shell {
+
+                grid-template-columns: 260px minmax(0, 1fr);
+                padding: 10px 16px;
+            }
+
+            .client-dashboard-shell .dashboard-sidebar {
+
+                padding: 16px 14px;
+                border-radius: 18px 0 0 18px;
+            }
+
+            .client-dashboard-shell .dashboard-brand {
+
+                margin-bottom: 24px;
+            }
+
+            .client-dashboard-shell .dashboard-brand-mark {
+
+                width: 42px;
+                height: 42px;
+            }
+
+            .client-dashboard-shell .dashboard-brand-title {
+
+                font-size: 20px;
+            }
+
+            .client-dashboard-shell .dashboard-menu-link {
+
+                min-height: 40px;
+            }
+
+            .client-dashboard-shell .dashboard-sidebar-help {
+
+                padding-top: 18px;
+            }
+
+            .client-dashboard-shell .dashboard-sidebar-help-card {
+
+                padding: 12px 14px;
+            }
+
+            .client-dashboard-shell .dashboard-sidebar-help-card .fs-2 {
+
+                font-size: 24px !important;
+            }
+
+            .client-dashboard-shell .dashboard-panel {
+
+                border-radius: 0 18px 18px 0;
+            }
+
+            .client-dashboard-shell .dashboard-topbar.client-topbar {
+
+                min-height: 60px;
+                padding: 0 24px;
+            }
+
+            .client-dashboard-shell .dashboard-topbar.client-topbar .dashboard-brand-mark {
+
+                width: 42px;
+                height: 42px;
+            }
+
+            .client-dashboard-shell .dashboard-topbar.client-topbar .fw-bold {
+
+                font-size: 22px !important;
+            }
+
+            .client-dashboard-shell .dashboard-topbar-actions {
+
+                gap: 14px;
+            }
+
+            .dashboard-content.client-ticket-create-view,
+            .dashboard-content.client-ticket-detail-view,
+            .dashboard-content.client-ticket-view {
+
+                padding: 14px 24px 16px;
+                overflow-y: auto;
+            }
+
+            .client-ticket-create-view .ticket-detail-header,
+            .client-ticket-detail-view .ticket-detail-header {
+
+                margin-bottom: 10px;
+            }
+
+            .client-ticket-create-view .ticket-detail-title,
+            .client-ticket-detail-view .ticket-detail-title,
+            .client-ticket-view .dashboard-title {
+
+                font-size: 28px;
+            }
+
+            .client-ticket-create-view .ticket-detail-header .dashboard-muted,
+            .client-ticket-detail-view .ticket-detail-header .dashboard-muted {
+
+                margin-top: 4px !important;
+                font-size: 14px;
+            }
+
+            .client-ticket-create-view .ticket-detail-grid {
+
+                gap: 12px;
+                grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+                align-items: start;
+            }
+
+            .client-ticket-create-view .ticket-stack {
+
+                gap: 12px;
+            }
+
+            .client-ticket-create-view .dashboard-card,
+            .client-ticket-detail-view .dashboard-card {
+
+                padding: 14px 16px;
+            }
+
+            .client-ticket-create-view .ticket-section-title,
+            .client-ticket-detail-view .ticket-section-title {
+
+                margin-bottom: 9px;
+                font-size: 16px;
+            }
+
+            .client-ticket-create-view .ticket-section-title i,
+            .client-ticket-detail-view .ticket-section-title i {
+
+                width: 23px;
+                height: 23px;
+            }
+
+            .client-ticket-create-view .mb-3 {
+
+                margin-bottom: 10px !important;
+            }
+
+            .client-ticket-create-view .row {
+
+                --bs-gutter-y: 0.75rem;
+            }
+
+            .client-ticket-create-view textarea.form-control {
+
+                min-height: 104px;
+            }
+
+            .client-ticket-create-view .form-control,
+            .client-ticket-create-view .form-select {
+
+                min-height: 38px;
+                font-size: 15px;
+            }
+
+            .client-ticket-create-view input[type="file"] {
+
+                font-size: 14px;
+            }
+
+            .client-ticket-create-view .mt-4 {
+
+                margin-top: 14px !important;
+            }
+
+            .client-ticket-create-view .login-btn {
+
+                min-height: 40px;
+                padding: 7px 14px;
+            }
+
+            .client-ticket-create-view aside .dashboard-card {
+
+                padding: 14px 16px;
+            }
+
+            .client-ticket-create-view aside .ticket-meta-grid {
+
+                gap: 10px;
+                padding-top: 8px;
+                margin-top: 8px;
+            }
+
+            .client-ticket-create-view aside .dashboard-muted {
+
+                font-size: 14px;
+            }
+
+            .client-ticket-detail-view .ticket-detail-grid {
+
+                gap: 12px;
+                grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
+                align-items: start;
+            }
+
+            .client-ticket-detail-view > .dashboard-card.mb-4 {
+
+                padding: 12px 16px;
+                margin-bottom: 10px !important;
+            }
+
+            .client-ticket-detail-view .ticket-summary-card {
+
+                grid-template-columns: minmax(210px, 1.2fr) repeat(4, minmax(88px, 1fr));
+                gap: 9px;
+                margin-bottom: 8px;
+            }
+
+            .client-ticket-detail-view .ticket-summary-main .dashboard-muted {
+
+                display: -webkit-box;
+                overflow: hidden;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+            }
+
+            .client-ticket-detail-view .ticket-meta-grid {
+
+                gap: 10px;
+                padding-top: 8px;
+                margin-top: 8px;
+            }
+
+            .client-ticket-detail-view .ticket-summary-main {
+
+                gap: 10px;
+            }
+
+            .client-ticket-detail-view .ticket-summary-main .dashboard-title {
+
+                font-size: 20px !important;
+            }
+
+            .client-ticket-detail-view .ticket-summary-icon {
+
+                flex-basis: 44px;
+                width: 44px;
+                height: 44px;
+                font-size: 19px;
+            }
+
+            .client-ticket-detail-view .ticket-summary-label {
+
+                margin-bottom: 3px;
+                font-size: 12px;
+            }
+
+            .client-ticket-detail-view .ticket-stack {
+
+                gap: 10px;
+            }
+
+            .client-ticket-detail-view .activity-timeline {
+
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding-left: 34px;
+            }
+
+            .client-ticket-detail-view .activity-timeline::before {
+
+                display: block;
+                left: 15px;
+            }
+
+            .client-ticket-detail-view .activity-item {
+
+                padding-left: 0;
+            }
+
+            .client-ticket-detail-view .activity-icon {
+
+                left: -34px;
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+
+            .client-ticket-detail-view .ticket-detail-grid > .dashboard-card:last-child > .btn {
+
+                margin-top: 10px !important;
+            }
+        }
+
+        @media (max-height: 700px) and (min-width: 993px) {
+
+            .client-dashboard-shell {
+
+                padding: 8px 12px;
+            }
+
+            .client-dashboard-shell .dashboard-sidebar-help-card {
+
+                padding: 10px 12px;
+            }
+
+            .client-dashboard-shell .dashboard-topbar.client-topbar {
+
+                min-height: 56px;
+            }
+
+            .dashboard-content.client-ticket-create-view,
+            .dashboard-content.client-ticket-detail-view {
+
+                padding-top: 12px;
+                padding-bottom: 12px;
+            }
+
+            .client-ticket-create-view .ticket-detail-grid {
+
+                gap: 10px;
+            }
+
+            .client-ticket-create-view textarea.form-control {
+
+                min-height: 88px;
+            }
+
+            .client-ticket-create-view .dashboard-card {
+
+                padding: 12px 14px;
+            }
+
+            .client-ticket-detail-view .ticket-summary-card {
+
+                grid-template-columns: minmax(190px, 1.2fr) repeat(4, minmax(82px, 1fr));
+            }
+
+            .client-ticket-detail-view .ticket-meta-grid {
+
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+
+            .client-ticket-detail-view .activity-timeline {
+
+                grid-template-columns: 1fr;
+                gap: 7px;
+            }
+
+            .client-ticket-detail-view .ticket-summary-main .dashboard-muted {
+
+                display: none;
+            }
+        }
+
+        @media (max-width: 1100px) {
+
+            .client-ticket-create-view,
+            .client-ticket-detail-view {
+
+                overflow-y: auto;
+            }
+
+            .client-ticket-create-view .ticket-detail-grid,
+            .client-ticket-detail-view .ticket-detail-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .client-ticket-detail-view .ticket-stack {
+
+                grid-template-rows: none;
+            }
+        }
+
+        @media (max-width: 992px) {
+
+            .dashboard-mobile-menu {
+
+                display: flex;
+                gap: 10px;
+                padding: 12px 18px;
+                overflow-x: auto;
+                background: #ffffff;
+                border-bottom: 1px solid #e5eaf4;
+            }
+
+            .dashboard-mobile-menu-link {
+
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                flex: 0 0 auto;
+                min-height: 40px;
+                padding: 0 14px;
+                color: #15107a;
+                font-size: 14px;
+                font-weight: 700;
+                text-decoration: none;
+                border: 1px solid #dbe3f1;
+                border-radius: 10px;
+                background: #f8fbff;
+            }
+
+            .dashboard-mobile-menu-link:hover,
+            .dashboard-mobile-menu-link:focus {
+
+                color: #ffffff;
+                background: linear-gradient(90deg, #4f46ff, #6d35ff);
+                border-color: transparent;
+            }
+
+            .dashboard-content.client-ticket-view,
+            .dashboard-content.client-ticket-create-view,
+            .dashboard-content.client-ticket-detail-view {
+
+                padding: 20px;
+                overflow-y: auto;
+            }
+
+            .client-ticket-card {
+
+                overflow: hidden;
+            }
+
+            .client-ticket-create-view .ticket-detail-title,
+            .client-ticket-detail-view .ticket-detail-title {
+
+                font-size: 28px;
+            }
+
+            .client-ticket-detail-view > .dashboard-card.mb-4 {
+
+                padding: 16px;
+            }
+
+            .client-ticket-detail-view .ticket-summary-card,
+            .client-ticket-detail-view .ticket-meta-grid {
+
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .client-ticket-card {
+
+                padding: 16px;
+            }
+
+            .client-ticket-table-wrap {
+
+                overflow-x: hidden;
+            }
+
+            .client-ticket-view .ticket-table,
+            .client-ticket-view .ticket-table tbody,
+            .client-ticket-view .ticket-table tr,
+            .client-ticket-view .ticket-table td {
+
+                display: block;
+                width: 100%;
+            }
+
+            .client-ticket-view .ticket-table thead {
+
+                display: none;
+            }
+
+            .client-ticket-view .ticket-table tr {
+
+                display: grid;
+                gap: 9px;
+                padding: 14px;
+                margin-bottom: 10px;
+                border: 1px solid #e5eaf4;
+                border-radius: 12px;
+                background: #ffffff;
+            }
+
+            .client-ticket-view .ticket-table td {
+
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 14px;
+                padding: 0 !important;
+                border: 0;
+                text-align: right;
+            }
+
+            .client-ticket-view .ticket-table td::before {
+
+                content: attr(data-label);
+                color: #15107a;
+                font-size: 12px;
+                font-weight: 700;
+                text-align: left;
+            }
+
+            .client-ticket-view .ticket-table td[data-label="Ticket"] {
+
+                display: block;
+                text-align: left;
+            }
+
+            .client-ticket-view .ticket-table td[data-label="Ticket"]::before,
+            .client-ticket-view .ticket-table td[data-label="Accion"]::before {
+
+                display: none;
+            }
+
+            .client-ticket-view .ticket-table td[data-label="Accion"] {
+
+                justify-content: flex-start;
+                padding-top: 4px !important;
+                text-align: left;
+            }
+
+            .ticket-pagination {
+
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .ticket-pagination .pagination {
+
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .client-ticket-create-view .dashboard-card,
+            .client-ticket-detail-view .dashboard-card {
+
+                padding: 16px;
+            }
+
+            .client-ticket-create-view .row > [class*="col-"] {
+
+                width: 100%;
+            }
+
+            .client-ticket-create-view textarea.form-control {
+
+                min-height: 132px;
+            }
+        }
+
+        @media (max-width: 576px) {
+
+            .dashboard-topbar.client-topbar {
+
+                align-items: center;
+                flex-direction: row;
+                gap: 10px;
+                min-height: 64px;
+                padding: 12px 14px;
+            }
+
+            .dashboard-topbar.client-topbar > .d-flex:first-child {
+
+                gap: 9px !important;
+                min-width: 0;
+            }
+
+            .dashboard-topbar.client-topbar > .d-flex:first-child .dashboard-brand-mark {
+
+                width: 38px;
+                height: 38px;
+            }
+
+            .dashboard-topbar.client-topbar > .d-flex:first-child .fw-bold {
+
+                overflow: hidden;
+                max-width: 96px;
+                font-size: 18px !important;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .dashboard-topbar.client-topbar > .d-flex:first-child .small,
+            .dashboard-topbar.client-topbar .dashboard-user-role,
+            .dashboard-topbar.client-topbar .dashboard-topbar-actions > a.dashboard-topbar-icon {
+
+                display: none;
+            }
+
+            .dashboard-topbar.client-topbar .dashboard-topbar-actions {
+
+                gap: 8px;
+                margin-left: auto;
+            }
+
+            .dashboard-topbar.client-topbar .dashboard-user-menu {
+
+                gap: 7px;
+            }
+
+            .dashboard-topbar.client-topbar .dashboard-user-avatar {
+
+                width: 36px;
+                height: 36px;
+            }
+
+            .dashboard-topbar.client-topbar .dashboard-user-name,
+            .dashboard-topbar.client-topbar .dashboard-logout-link {
+
+                font-size: 11px;
+            }
+
+            .dashboard-mobile-menu {
+
+                padding: 10px 12px;
+            }
+
+            .dashboard-content.client-ticket-view,
+            .dashboard-content.client-ticket-create-view,
+            .dashboard-content.client-ticket-detail-view {
+
+                padding: 16px 14px;
+            }
+
+            .client-ticket-view > .d-flex {
+
+                margin-bottom: 14px !important;
+            }
+
+            .client-ticket-view .dashboard-title,
+            .client-ticket-create-view .ticket-detail-title,
+            .client-ticket-detail-view .ticket-detail-title {
+
+                font-size: 26px;
+            }
+
+            .client-ticket-card .d-flex.justify-content-between {
+
+                align-items: flex-start !important;
+            }
+
+            .client-ticket-detail-view .ticket-summary-card,
+            .client-ticket-detail-view .ticket-meta-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .client-ticket-detail-view .ticket-summary-main {
+
+                align-items: center;
+            }
+
+            .client-ticket-detail-view .ticket-summary-icon {
+
+                flex-basis: 46px;
+                width: 46px;
+                height: 46px;
+            }
+
+            .client-ticket-detail-view .activity-timeline {
+
+                padding-left: 34px;
+            }
+
+            .client-ticket-detail-view .activity-timeline::before {
+
+                left: 15px;
+            }
+
+            .client-ticket-detail-view .activity-icon {
+
+                left: -34px;
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
         }
 
         @media (max-width: 1200px) {

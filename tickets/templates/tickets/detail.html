@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<div class="dashboard-shell">
+<div class="dashboard-shell {% if request.user.role == 'client' %}client-dashboard-shell{% endif %}">
   {% include 'components/dashboard/sidebar.html' with active_menu='tickets' %}
 
   <section class="dashboard-panel">

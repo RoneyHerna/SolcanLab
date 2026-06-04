@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<div class="dashboard-shell">
+<div class="dashboard-shell {% if request.user.role == 'client' %}client-dashboard-shell{% endif %}">
   {% include 'components/dashboard/sidebar.html' with active_menu='tickets' %}
 
   <section class="dashboard-panel">
@@ -108,7 +108,7 @@
             <tbody>
               {% for ticket in tickets %}
               <tr>
-                <td>
+                <td data-label="Ticket">
                   <a
                     href="/tickets/detail/{{ ticket.id }}/"
                     class="fw-semibold text-decoration-none"
@@ -121,8 +121,8 @@
                 </td>
 
                 {% if request.user.role == 'admin' %}
-                <td>{{ ticket.created_by }}</td>
-                <td>
+                <td data-label="Cliente">{{ ticket.created_by }}</td>
+                <td data-label="Asignado">
                   {% if ticket.assigned_to %}
                   <span class="fw-semibold">{{ ticket.assigned_to }}</span>
                   {% else %}
@@ -131,13 +131,13 @@
                 </td>
                 {% endif %}
 
-                <td>{% include 'components/tickets/priority_badge.html' %}</td>
+                <td data-label="Prioridad">{% include 'components/tickets/priority_badge.html' %}</td>
 
-                <td>{% include 'components/tickets/status_badge.html' %}</td>
+                <td data-label="Estado">{% include 'components/tickets/status_badge.html' %}</td>
 
-                <td>{{ ticket.elaboration_date|date:"d/m/Y" }}</td>
+                <td data-label="Fecha">{{ ticket.elaboration_date|date:"d/m/Y" }}</td>
 
-                <td>
+                <td data-label="Accion">
                   {% if request.user.role == 'admin' %}
                   <div class="d-flex flex-wrap gap-2">
                     <a

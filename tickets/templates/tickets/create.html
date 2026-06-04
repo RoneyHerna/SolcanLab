@@ -6,13 +6,15 @@
 
 {% block content %}
 
-<div class="dashboard-shell">
+<div class="dashboard-shell {% if request.user.role == 'client' %}client-dashboard-shell{% endif %}">
   {% include 'components/dashboard/sidebar.html' with active_menu='create' %}
 
   <section class="dashboard-panel">
     {% include 'components/dashboard/topbar.html' %}
 
-    <div class="dashboard-content">
+    <div
+      class="dashboard-content {% if request.user.role == 'client' %}client-ticket-create-view{% endif %}"
+    >
       <div class="ticket-detail-header">
         <div>
           <h1 class="ticket-detail-title">Crear Ticket</h1>
