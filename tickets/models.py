@@ -123,3 +123,63 @@ class NoteAttachment(models.Model):
 
     def __str__(self):
         return self.file.name
+
+
+class TicketNotification(models.Model):
+
+    TYPE_CHOICES = (
+        ('ticket_created', 'Ticket creado'),
+    )
+
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='ticket_notifications'
+    )
+
+    ticket = models.ForeignKey(
+        Ticket,
+        on_delete=models.CASCADE,
+        related_name='notifications'
+    )
+
+    notification_type = models.CharField(
+        max_length=30,
+        choices=TYPE_CHOICES,
+        default='ticket_created'
+    )
+
+    title = models.CharField(
+        max_length=120
+    )
+
+    message = models.CharField(
+        max_length=255
+    )
+
+    is_read = models.BooleanField(
+        default=False
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    read_at = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    class Meta:
+        ordering = ('-created_at',)
+
+    def mark_as_read(self):
+        if self.is_read:
+            return
+
+        self.is_read = True
+        self.read_at = timezone.now()
+        self.save(update_fields=['is_read', 'read_at'])
+
+    def __str__(self):
+        return self.title

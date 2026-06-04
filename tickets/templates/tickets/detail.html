@@ -12,7 +12,9 @@
   <section class="dashboard-panel">
     {% include 'components/dashboard/topbar.html' %}
 
-    <div class="dashboard-content">
+    <div
+      class="dashboard-content {% if request.user.role == 'client' %}client-ticket-detail-view{% endif %}"
+    >
       <div class="ticket-detail-header">
         <div>
           <a href="/tickets/" class="ticket-back-link">
@@ -185,13 +187,18 @@
             {% endfor %}
           </div>
 
-          {% if request.user.role == 'admin' %}
+          {% if request.user.role == 'admin' or notes %}
           <div class="dashboard-card">
             <div class="ticket-section-title">
               <i class="bi bi-journal-text"></i>
+              {% if request.user.role == 'admin' %}
               Notas internas
+              {% else %}
+              Seguimiento del administrador
+              {% endif %}
             </div>
 
+            {% if request.user.role == 'admin' %}
             <form
               method="POST"
               enctype="multipart/form-data"
@@ -227,9 +234,12 @@
                 </button>
               </div>
             </form>
+            {% endif %}
 
             {% if notes %}
+            {% if request.user.role == 'admin' %}
             <hr />
+            {% endif %}
 
             {% for note in notes %}
             <div class="note-card mb-3">
@@ -252,7 +262,12 @@
               </a>
               {% endfor %}
             </div>
-            {% endfor %} {% endif %}
+            {% endfor %}
+            {% elif request.user.role == 'admin' %}
+            <p class="dashboard-muted mb-0 mt-3">
+              A&uacute;n no hay notas registradas.
+            </p>
+            {% endif %}
           </div>
           {% endif %}
         </div>
@@ -322,7 +337,7 @@
               <div class="activity-icon purple">
                 <i class="bi bi-chat-dots"></i>
               </div>
-              <div class="fw-semibold">Nota interna agregada</div>
+              <div class="fw-semibold">Nota del administrador agregada</div>
               <div class="dashboard-muted">
                 {{ note.user.username }} agreg&oacute; una nota
               </div>

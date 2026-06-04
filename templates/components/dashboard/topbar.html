@@ -18,14 +18,100 @@
             <i class="bi bi-search fs-5"></i>
         </a>
 
-        <a href="/tickets/" class="dashboard-topbar-icon">
-            <i class="bi bi-bell fs-5"></i>
-            {% if open_tickets %}
-                <span class="dashboard-notification-badge">
-                    {{ open_tickets }}
+        <div
+            class="dashboard-notification-menu"
+            data-notifications-widget
+            data-summary-url="/tickets/notifications/summary/"
+            data-read-url="/tickets/notifications/read/"
+        >
+            <button
+                type="button"
+                class="dashboard-topbar-icon dashboard-notification-toggle"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="outside"
+                aria-expanded="false"
+                aria-label="Abrir notificaciones"
+            >
+                <i class="bi bi-bell fs-5"></i>
+                <span
+                    class="dashboard-notification-badge {% if not dashboard_unread_notifications %}d-none{% endif %}"
+                    data-notification-badge
+                >
+                    {{ dashboard_unread_notifications }}
                 </span>
-            {% endif %}
-        </a>
+            </button>
+
+            <div class="dropdown-menu dropdown-menu-end dashboard-notification-dropdown">
+                <div class="dashboard-notification-header">
+                    <div>
+                        <div class="dashboard-notification-title">
+                            Notificaciones
+                        </div>
+                        <div class="dashboard-notification-tabs">
+                            <span>Todas</span>
+                            <span data-notification-unread-label>
+                                No le&iacute;das ({{ dashboard_unread_notifications }})
+                            </span>
+                        </div>
+                    </div>
+
+                    <form
+                        method="POST"
+                        action="/tickets/notifications/read/"
+                        class="{% if not dashboard_unread_notifications %}d-none{% endif %}"
+                        data-notification-read-form
+                    >
+                        {% csrf_token %}
+                        <button type="submit" class="dashboard-notification-read-all">
+                            Marcar todas como le&iacute;das
+                        </button>
+                    </form>
+                </div>
+
+                <div
+                    class="dashboard-notification-list"
+                    aria-live="polite"
+                    data-notification-list
+                >
+                    {% for notification in dashboard_notifications %}
+                    <a
+                        href="/tickets/notifications/{{ notification.id }}/open/"
+                        class="dashboard-notification-item {% if not notification.is_read %}unread{% endif %}"
+                    >
+                        <span class="dashboard-notification-icon">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </span>
+
+                        <span class="dashboard-notification-body">
+                            <span class="dashboard-notification-item-title">
+                                {{ notification.title }}
+                            </span>
+                            <span class="dashboard-notification-message">
+                                {{ notification.message }}
+                            </span>
+                        </span>
+
+                        <span class="dashboard-notification-time">
+                            hace {{ notification.created_at|timesince }}
+                        </span>
+
+                        {% if not notification.is_read %}
+                        <span class="dashboard-notification-dot"></span>
+                        {% endif %}
+                    </a>
+                    {% empty %}
+                    <div class="dashboard-notification-empty">
+                        No tienes notificaciones.
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <a href="/tickets/" class="dashboard-notification-footer">
+                    Ver todos los tickets
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
 
         <div class="dashboard-user-menu">
             <span class="dashboard-user-avatar">

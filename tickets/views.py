@@ -1,11 +1,23 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_GET, require_POST
 
 from .exports import build_ticket_export_workbook
 from .forms import TicketExportFilterForm, TicketForm, TicketNoteForm
-from .models import NoteAttachment, Ticket, TicketAttachment, TicketNote
+from .models import (
+    NoteAttachment,
+    Ticket,
+    TicketAttachment,
+    TicketNote,
+    TicketNotification,
+)
+from .notifications import (
+    get_user_notification_summary,
+    mark_user_notifications_as_read,
+    notify_admins_ticket_created,
+)
 from .selectors import get_status_counts, get_ticket_queryset
 
 
@@ -33,10 +45,9 @@ def user_can_view_ticket(user, ticket):
 
 
 def get_ticket_notes(user, ticket):
-    if user.role == 'admin':
-        return ticket.notes.all().order_by('-created_at')
-
-    return TicketNote.objects.none()
+    return ticket.notes.select_related('user').prefetch_related(
+        'attachments'
+    ).order_by('-created_at')
 
 
 def get_ticket_detail_context(ticket, user, note_form=None):
@@ -120,6 +131,7 @@ def create_ticket(request):
                 ticket,
                 form.cleaned_data.get('attachment'),
             )
+            notify_admins_ticket_created(ticket)
 
             return redirect('/tickets/')
     else:
@@ -223,3 +235,38 @@ def export_tickets(request):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
     return response
+
+
+@login_required
+def open_notification(request, notification_id):
+    notification = get_object_or_404(
+        TicketNotification,
+        id=notification_id,
+        recipient=request.user,
+    )
+    notification.mark_as_read()
+
+    if notification.ticket and user_can_view_ticket(
+        request.user,
+        notification.ticket,
+    ):
+        return redirect(f'/tickets/detail/{notification.ticket.id}/')
+
+    return redirect('/tickets/')
+
+
+@login_required
+@require_GET
+def notification_summary(request):
+    return JsonResponse(get_user_notification_summary(request.user))
+
+
+@login_required
+@require_POST
+def mark_notifications_read(request):
+    mark_user_notifications_as_read(request.user)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse(get_user_notification_summary(request.user))
+
+    return redirect(request.META.get('HTTP_REFERER', '/tickets/'))

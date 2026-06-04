@@ -21,6 +21,24 @@ urlpatterns = [
         name='export_tickets'
     ),
 
+    path(
+        'notifications/<int:notification_id>/open/',
+        views.open_notification,
+        name='open_notification'
+    ),
+
+    path(
+        'notifications/summary/',
+        views.notification_summary,
+        name='notification_summary'
+    ),
+
+    path(
+        'notifications/read/',
+        views.mark_notifications_read,
+        name='mark_notifications_read'
+    ),
+
      path(
         'take/<int:ticket_id>/',
         views.take_ticket,

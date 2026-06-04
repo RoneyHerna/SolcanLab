@@ -462,6 +462,189 @@ body {
             background: #8a3ffc;
         }
 
+        .dashboard-notification-menu {
+
+            position: relative;
+        }
+
+        .dashboard-notification-toggle {
+
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .dashboard-notification-toggle:hover,
+        .dashboard-notification-toggle:focus {
+
+            color: #ffffff;
+            background: rgba(255,255,255,0.12);
+            outline: none;
+        }
+
+        .dashboard-notification-dropdown {
+
+            width: min(420px, calc(100vw - 32px));
+            padding: 0;
+            border: 1px solid rgba(219,227,241,0.88);
+            border-radius: 18px;
+            overflow: hidden;
+            color: #15107a;
+            background: rgba(255,255,255,0.98);
+            box-shadow: 0 26px 60px rgba(21,16,122,0.22);
+        }
+
+        .dashboard-notification-header {
+
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid #e5eaf4;
+        }
+
+        .dashboard-notification-title {
+
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .dashboard-notification-tabs {
+
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            color: #553cff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .dashboard-notification-tabs span:last-child {
+
+            color: #667085;
+        }
+
+        .dashboard-notification-read-all {
+
+            border: 0;
+            padding: 0;
+            color: #553cff;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            background: transparent;
+        }
+
+        .dashboard-notification-list {
+
+            display: grid;
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .dashboard-notification-item {
+
+            position: relative;
+            display: grid;
+            grid-template-columns: 42px minmax(0, 1fr) auto 8px;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: #15107a;
+            text-decoration: none;
+            border-bottom: 1px solid #eef2ff;
+        }
+
+        .dashboard-notification-item:hover {
+
+            color: #15107a;
+            background: #f8fbff;
+        }
+
+        .dashboard-notification-item.unread {
+
+            background: linear-gradient(90deg, rgba(85,60,255,0.07), rgba(255,255,255,0.98));
+        }
+
+        .dashboard-notification-icon {
+
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            color: #2563eb;
+            border-radius: 12px;
+            background: #dbeafe;
+        }
+
+        .dashboard-notification-body {
+
+            display: grid;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .dashboard-notification-item-title {
+
+            overflow: hidden;
+            font-size: 14px;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .dashboard-notification-message {
+
+            overflow: hidden;
+            color: #667085;
+            font-size: 13px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .dashboard-notification-time {
+
+            color: #667085;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .dashboard-notification-dot {
+
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #553cff;
+        }
+
+        .dashboard-notification-empty {
+
+            padding: 30px 20px;
+            color: #667085;
+            text-align: center;
+        }
+
+        .dashboard-notification-footer {
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 20px;
+            color: #553cff;
+            font-weight: 700;
+            text-decoration: none;
+            border-top: 1px solid #e5eaf4;
+        }
+
+        .dashboard-notification-footer:hover {
+
+            color: #15107a;
+            background: #f8fbff;
+        }
+
         .dashboard-user-menu {
 
             display: flex;
@@ -1324,6 +1507,157 @@ body {
         .activity-icon.gold {
 
             background: #f6b500;
+        }
+
+        .client-ticket-detail-view {
+
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .client-ticket-detail-view .ticket-detail-header {
+
+            flex: 0 0 auto;
+            margin-bottom: 10px;
+        }
+
+        .client-ticket-detail-view .ticket-back-link {
+
+            margin-bottom: 4px;
+        }
+
+        .client-ticket-detail-view .ticket-detail-title {
+
+            font-size: 30px;
+        }
+
+        .client-ticket-detail-view .ticket-detail-header .dashboard-muted {
+
+            margin-top: 4px !important;
+            font-size: 14px;
+        }
+
+        .client-ticket-detail-view > .dashboard-card.mb-4 {
+
+            flex: 0 0 auto;
+            margin-bottom: 12px !important;
+            padding: 14px 20px;
+        }
+
+        .client-ticket-detail-view .ticket-summary-card {
+
+            grid-template-columns: minmax(220px, 1.3fr) repeat(4, minmax(110px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .client-ticket-detail-view .ticket-summary-main {
+
+            gap: 12px;
+        }
+
+        .client-ticket-detail-view .ticket-summary-main .dashboard-title {
+
+            margin-bottom: 4px !important;
+            font-size: 22px !important;
+        }
+
+        .client-ticket-detail-view .ticket-summary-icon {
+
+            flex-basis: 52px;
+            width: 52px;
+            height: 52px;
+            font-size: 22px;
+        }
+
+        .client-ticket-detail-view .ticket-summary-label {
+
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+
+        .client-ticket-detail-view .ticket-meta-grid {
+
+            gap: 12px;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .client-ticket-detail-view .ticket-detail-grid {
+
+            flex: 1;
+            min-height: 0;
+            gap: 14px;
+        }
+
+        .client-ticket-detail-view .ticket-stack {
+
+            min-height: 0;
+            grid-template-rows: auto auto minmax(0, 1fr);
+            gap: 12px;
+        }
+
+        .client-ticket-detail-view .ticket-detail-grid .dashboard-card {
+
+            padding: 14px 18px;
+        }
+
+        .client-ticket-detail-view .ticket-section-title {
+
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+
+        .client-ticket-detail-view .ticket-section-title i {
+
+            width: 24px;
+            height: 24px;
+        }
+
+        .client-ticket-detail-view .note-card {
+
+            padding: 12px;
+            margin-bottom: 10px !important;
+        }
+
+        .client-ticket-detail-view .ticket-stack > .dashboard-card:last-child,
+        .client-ticket-detail-view .ticket-detail-grid > .dashboard-card:last-child {
+
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .client-ticket-detail-view .activity-timeline {
+
+            gap: 10px;
+            padding-left: 38px;
+        }
+
+        .client-ticket-detail-view .activity-timeline::before {
+
+            left: 17px;
+        }
+
+        .client-ticket-detail-view .activity-icon {
+
+            left: -38px;
+            width: 34px;
+            height: 34px;
+        }
+
+        .client-ticket-detail-view .activity-item .dashboard-muted {
+
+            line-height: 1.25;
+        }
+
+        .client-ticket-detail-view .ticket-detail-grid > .dashboard-card:last-child > .btn {
+
+            min-height: 40px;
+            margin-top: 12px !important;
         }
 
         @media (max-width: 1200px) {

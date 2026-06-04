@@ -97,6 +97,7 @@
                 <th>Ticket</th>
                 {% if request.user.role == 'admin' %}
                 <th>Cliente</th>
+                <th>Asignado</th>
                 {% endif %}
                 <th>Prioridad</th>
                 <th>Estado</th>
@@ -121,6 +122,13 @@
 
                 {% if request.user.role == 'admin' %}
                 <td>{{ ticket.created_by }}</td>
+                <td>
+                  {% if ticket.assigned_to %}
+                  <span class="fw-semibold">{{ ticket.assigned_to }}</span>
+                  {% else %}
+                  <span class="dashboard-muted small">Sin asignar</span>
+                  {% endif %}
+                </td>
                 {% endif %}
 
                 <td>{% include 'components/tickets/priority_badge.html' %}</td>
@@ -170,7 +178,10 @@
               </tr>
               {% empty %}
               <tr>
-                <td colspan="6" class="text-center py-5">
+                <td
+                  colspan="{% if request.user.role == 'admin' %}7{% else %}5{% endif %}"
+                  class="text-center py-5"
+                >
                   <div class="dashboard-muted mb-3">
                     No hay tickets registrados.
                   </div>
